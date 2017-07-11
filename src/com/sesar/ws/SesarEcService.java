@@ -26,6 +26,7 @@ import com.sesar.model.*;
 
 http://localhost:8080/sesarec/ssec/samples
 application/xml
+accept-language text/html
 
 <?xml version="1.0" encoding="UTF-8"?>
 <samples xmlns:sam2="http://app.geosamples.org">
@@ -61,9 +62,11 @@ public class SesarEcService {
 	@Path("/samples")
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
-	public void getSamples(Samples samples) {
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getSamples(Samples samples) {
 		List<Sample> list = samples.getSamples();
 		for(Sample sample: list) new SampleDao(sample).saveDataToDB();		
+		return "The data have been saved to database!";
 	}
 	
 }

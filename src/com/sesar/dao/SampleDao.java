@@ -5,6 +5,13 @@ import java.util.List;
 
 import com.sesar.model.*;
 import com.sesar.util.DatabaseUtil;
+/**
+* Retrieve data from XML and create updating queries for saving to database.
+*
+* @author  Bai
+* @version 1.0
+* @since   2017-07-11 
+*/
 
 public class SampleDao {
 
@@ -50,26 +57,18 @@ public class SampleDao {
 	elevation_datum
 	*/
 	private String saveSamplingFeature() {
+		String name = sample.getName();
+		Object obj =  DatabaseUtil.getUniqueResult("select sampling_feature_code from sampling_feature s where upper(sampling_feature_code) = upper('"+name+"')");
+		if(obj != null) return "Sample name "+name+ " already exists in database";
 		String type = sample.getSampleType();
-		Object obj = DatabaseUtil.getUniqueResult("select sampling_feature_type_num from sampling_feature_type where upper(sampling_feature_type_name) = upper('"+type+"')");
+		obj = DatabaseUtil.getUniqueResult("select sampling_feature_type_num from sampling_feature_type where upper(sampling_feature_type_name) = upper('"+type+"')");
 		System.out.println("bc-1 "+type+":"+obj);
 		if(obj == null) return "sample_type: "+type+" is not found in database";
 		int typeNum = (Integer)obj;
-		String name = sample.getName();
-		System.out.println("bc-sample.getEndPoint() "+sample.getEndPoint());
 		String geometry = getGeometry(sample.getStartPoint(), sample.getEndPoint());
 		String q = "INSERT INTO sampling_feature values ("+(++sfNum)+","+typeNum+",'"+name+"',null,'sesar',"+geometry+sample.getElevationM()+",'"+sample.getVerticalDatum()+"')";
-		System.out.println("bc-sfq :"+q);
 		queries.add(q);
-		DatabaseUtil.update(queries);
-/*		INSERT INTO earthchemdb2.earthchem.sampling_feature
-		(sampling_feature_num, sampling_feature_type_num, sampling_feature_code, sampling_feature_name, sampling_feature_description, sampling_feature_geotype, feature_geometry, elevation_m, elevation_datum)
-	VALUES 
-		(, , '', '', '', '', '', , '');
-*/		
-
-		
-		
+		DatabaseUtil.update(queries);		
 		return null;
 	}
 	

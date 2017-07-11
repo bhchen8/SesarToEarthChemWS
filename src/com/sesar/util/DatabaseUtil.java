@@ -12,11 +12,11 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
-* This class is used for making database connection and for retrieving data from database by JDBC. 
+* This class is used for making database connection, for retrieving data from database, and for saving data to database by JDBC. 
 *
 * @author  Bai
 * @version 1.0
-* @since   2017-07-06 
+* @since   2017-07-11
 */
 public class DatabaseUtil {
 
