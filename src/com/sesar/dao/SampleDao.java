@@ -32,6 +32,8 @@ public class SampleDao {
 		else return error;
 		if(error==null) error=saveSamplingFeatureExternalIdentifierForIGSN();
 		else return error;
+		if(error==null) error=saveSamplingFeatureTaxonomicClassifierForMetamorphic();
+		else return error;
 	/*	System.out.println("bc-name: "+sample.getSampleType()+sample.getName());
 		SampleOtherNames others = sample.getSampleOtherNames();
 		String othernames = others.getSampleOtherName().get(0);
@@ -91,6 +93,22 @@ public class SampleDao {
 			q = "INSERT INTO related_feature VALUES ("+obj+","+sfNum+",13," +ip+")";		
 			queries.add(q); 
 		} 
+		return null;
+	}
+	
+	private String saveSamplingFeatureTaxonomicClassifierForMetamorphic() {
+		Classification classification = sample.getClassification();
+		Rock rock = classification.getRock();
+		rock.getMetamorphic().getMetamorphicType();
+		String type = rock.getMetamorphic().getMetamorphicType();
+		if("".equals(type)) return null;
+		Object obj =  DatabaseUtil.getUniqueResult("select max(taxonomic_classifier_num+1) from taxonomic_classifier");
+		String tcNum = ""+obj;
+		String q ="INSERT INTO taxonomic_classifier VALUES ("+tcNum +",'Sesar','"+type+"',null,'Sesar Classification from Sesar')";
+		queries.add(q);
+		obj =  DatabaseUtil.getUniqueResult("SELECT max(bridge_num+1) FROM sampling_feature_taxonomic_classifier");
+		q ="INSERT INTO sampling_feature_taxonomic_classifier VALUES ("+obj+","+sfNum+","+tcNum+")";
+		queries.add(q);
 		return null;
 	}
 	
