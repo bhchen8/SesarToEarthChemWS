@@ -64,9 +64,16 @@ public class SesarEcService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getSamples(Samples samples) {
+		String error = null;
+		String name = null;
 		List<Sample> list = samples.getSamples();
-		for(Sample sample: list) new SampleDao(sample).saveDataToDB();		
-		return "The data have been saved to database!";
+		for(Sample sample: list) {
+			name = sample.getName();
+			error = new SampleDao(sample).saveDataToDB();		
+			if(error != null) break;
+		}
+		if(error != null) return "Error: "+error+" The data for sample "+name+" was not saved to the database.";
+		else return "The data have been saved to database!";
 	}
 	
 }

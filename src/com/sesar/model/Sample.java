@@ -26,10 +26,11 @@ public class Sample implements Serializable {
 	private float elevationEnd;
 	private String elevationUnit;
 	private String verticalDatum;//vertical_datum
-	
-/*	private String material;
+	private String material;
 	private String igsn;
 	private String parentIgsn; //parent_igsn;
+/*	
+	
 	private String classificationComment; //classification_comment;
 	private String fieldName; //field_name;
 	private String description;
@@ -170,6 +171,28 @@ public class Sample implements Serializable {
 	@XmlElement (name = "vertical_datum")
 	public void setVerticalDatum(String verticalDatum) {
 		this.verticalDatum = verticalDatum;
+	}	
+	public String getMaterial() {
+		return material;
+	}
+	@XmlElement (name = "material")
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+	
+	public String getIgsn() {
+		return igsn;
+	}
+	@XmlElement (name = "igsn")
+	public void setIgsn(String igsn) {
+		this.igsn = igsn;
+	}
+	public String getParentIgsn() {
+		return parentIgsn;
+	}
+	@XmlElement (name = "parent_igsn")
+	public void setParentIgsn(String parentIgsn) {
+		this.parentIgsn = parentIgsn;
 	}
 	/////////////
 	public String getStartPoint() {
