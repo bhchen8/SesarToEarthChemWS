@@ -34,6 +34,7 @@ public class SampleDao {
 		else return error;
 		if(error==null) error=saveSamplingFeatureTaxonomicClassifierForMetamorphic();
 		else return error;
+		saveSamplingFeatureAnnotationForClassificationComment();
 	/*	System.out.println("bc-name: "+sample.getSampleType()+sample.getName());
 		SampleOtherNames others = sample.getSampleOtherNames();
 		String othernames = others.getSampleOtherName().get(0);
@@ -112,6 +113,22 @@ public class SampleDao {
 		return null;
 	}
 	
+	private String saveSamplingFeatureAnnotationForClassificationComment() {
+		String cc = sample.getClassificationComment();
+		if("".equals(cc)) return null;
+		Object obj =  DatabaseUtil.getUniqueResult("select max(annotation_num+1) from annotation");
+		String annotationNum = ""+obj;
+		obj = DatabaseUtil.getUniqueResult("select annotation_type_num from annotation_type where annotation_type_name = 'SampleComment'");
+		String type = ""+obj;
+		String q = "INSERT INTO annotation values ("+annotationNum+","+type+",'"+cc+"',139,now())";
+		queries.add(q);
+		obj = DatabaseUtil.getUniqueResult("SELECT max(sampling_feature_annotation_num+1) FROM sampling_feature_annotation");
+		String sfan = ""+obj;
+		q = "INSERT INTO sampling_feature_annotation values ("+sfan+","+sfNum+","+annotationNum+")";
+		queries.add(q);
+		return null; 
+	}
+	
 	private String getGeometry(String p1, String p2) {
    	 if(p2 != null && p1 != null) {return "'LINE' ,ST_SetSRID(ST_MakeLINE(ST_MakePoint("+p1+"), ST_MakePoint("+p2+")), 4326),";  		
    	 } else if (p1 != null) {
@@ -120,12 +137,6 @@ public class SampleDao {
    		 return "'N/A',ST_SetSRID(ST_MakePoint(90,0), 4326),";
    	 }
     }
-/*	
-	private boolean saveSamplingFeature() {
-		boolean flag = true;
-		return flag;
-	}
-*/	
-	
+
 	
 }

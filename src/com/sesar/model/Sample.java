@@ -29,9 +29,10 @@ public class Sample implements Serializable {
 	private String material;
 	private String igsn;
 	private String parentIgsn; //parent_igsn;
+	private String classificationComment; //classification_comment;
 /*	
 	
-	private String classificationComment; //classification_comment;
+	
 	private String fieldName; //field_name;
 	private String description;
 	private int ageMin; //age_min;
@@ -193,6 +194,14 @@ public class Sample implements Serializable {
 	@XmlElement (name = "parent_igsn")
 	public void setParentIgsn(String parentIgsn) {
 		this.parentIgsn = parentIgsn;
+	}
+	
+	public String getClassificationComment() {
+		return classificationComment;
+	}
+	@XmlElement (name = "classification_comment")
+	public void setClassificationComment(String classificationComment) {
+		this.classificationComment = classificationComment;
 	}
 	/////////////
 	public String getStartPoint() {
