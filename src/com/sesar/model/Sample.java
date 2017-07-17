@@ -30,27 +30,20 @@ public class Sample implements Serializable {
 	private String igsn;
 	private String parentIgsn; //parent_igsn;
 	private String classificationComment; //classification_comment;
-/*	
-	
-	
 	private String fieldName; //field_name;
 	private String description;
-	private int ageMin; //age_min;
-	private int ageMax; //age_max
-	private String ageUnit; //age_unit
+	private Float ageMin; //age_min;
+	private Float ageMax; //age_max
+	//private String ageUnit; //age_unit
 	private String geologicalAge; //geological_age
 	private String geologicalUnit; //geological_unit
 	private String collectionMethod; //collection_method
-	private String collectionMethodDescr; //collection_method_descr
-	private float size;
-	private String size_unit; //size_unit
+	private Float size;
+	private String sizeUnit; //size_unit
 	private String sampleComment;//sample_comment
-	
-	
-	
 	private String navigationType;//navigation_type
-	private String primaryLocation_type;//primary_location_type
-	private String primaryLocation_name;//primary_location_name
+	private String primaryLocationType;//primary_location_type
+	private String primaryLocationName;//primary_location_name
 	private String locationDescription;//location_description
 	private String locality;
 	private String localityDescription;//locality_description
@@ -58,6 +51,11 @@ public class Sample implements Serializable {
 	private String province;
 	private String county;
 	private String city;
+/*	
+	private String collectionMethodDescr; //collection_method_descr
+	private Float purpose;//What is the extension_property.property_data_unit_num for "purpose"?
+	
+	
 	private String cruiseFieldPrgrm;//cruise_field_prgrm
 	private String platformType;//platform_type
 	private String platformName;//platform_name
@@ -202,6 +200,148 @@ public class Sample implements Serializable {
 	@XmlElement (name = "classification_comment")
 	public void setClassificationComment(String classificationComment) {
 		this.classificationComment = classificationComment;
+	}	
+	public String getFieldName() {
+		return fieldName;
+	}
+	@XmlElement (name = "field_name")
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+	public String getDescription() {
+		return description;
+	}
+	@XmlElement (name = "description")
+	public void setDescription(String description) {
+		this.description = description;
+	}	
+	public Float getAgeMin() {
+		return ageMin;
+	}
+	@XmlElement (name = "age_min")
+	public void setAgeMin(Float ageMin) {
+		this.ageMin = ageMin;
+	}
+	public Float getAgeMax() {
+		return ageMax;
+	}
+	@XmlElement (name = "age_max")
+	public void setAgeMax(Float ageMax) {
+		this.ageMax = ageMax;
+	}
+	public String getGeologicalAge() {
+		return geologicalAge;
+	}
+	@XmlElement (name = "geological_age")
+	public void setGeologicalAge(String geologicalAge) {
+		this.geologicalAge = geologicalAge;
+	}
+	public String getGeologicalUnit() {
+		return geologicalUnit;
+	}
+	@XmlElement (name = "geological_unit")
+	public void setGeologicalUnit(String geologicalUnit) {
+		this.geologicalUnit = geologicalUnit;
+	}	
+	public String getCollectionMethod() {
+		return collectionMethod;
+	}
+	@XmlElement (name = "collection_method")
+	public void setCollectionMethod(String collectionMethod) {
+		this.collectionMethod = collectionMethod;
+	}
+	public Float getSize() {
+		return size;
+	}
+	@XmlElement
+	public void setSize(Float size) {
+		this.size = size;
+	}
+	public String getSizeUnit() {
+		return sizeUnit;
+	}
+	@XmlElement (name = "size_unit")
+	public void setSizeUnit(String sizeUnit) {
+		this.sizeUnit = sizeUnit;
+	}
+	public String getSampleComment() {
+		return sampleComment;
+	}
+	@XmlElement (name = "sample_comment")
+	public void setSampleComment(String sampleComment) {
+		this.sampleComment = sampleComment;
+	}	
+	public String getNavigationType() {
+		return navigationType;
+	}
+	@XmlElement (name = "navigation_type")
+	public void setNavigationType(String navigationType) {
+		this.navigationType = navigationType;
+	}
+	public String getPrimaryLocationType() {
+		return primaryLocationType;
+	}
+	@XmlElement (name = "primary_location_type")
+	public void setPrimaryLocationType(String primaryLocationType) {
+		this.primaryLocationType = primaryLocationType;
+	}
+	public String getPrimaryLocationName() {
+		return primaryLocationName;
+	}
+	@XmlElement (name = "primary_location_name")
+	public void setPrimaryLocationName(String primaryLocationName) {
+		this.primaryLocationName = primaryLocationName;
+	}
+	public String getLocationDescription() {
+		return locationDescription;
+	}
+	@XmlElement (name = "location_description")
+	public void setLocationDescription(String locationDescription) {
+		this.locationDescription = locationDescription;
+	}
+	
+	
+	public String getLocality() {
+		return locality;
+	}
+	@XmlElement
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+	public String getLocalityDescription() {
+		return localityDescription;
+	}
+	@XmlElement (name = "locality_description")
+	public void setLocalityDescription(String localityDescription) {
+		this.localityDescription = localityDescription;
+	}
+	public String getCountry() {
+		return country;
+	}
+	@XmlElement
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getProvince() {
+		return province;
+	}
+	@XmlElement
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getCounty() {
+		return county;
+	}
+	@XmlElement
+	public void setCounty(String county) {
+		this.county = county;
+	}
+	public String getCity() {
+		return city;
+	}
+	@XmlElement
+	public void setCity(String city) {
+		this.city = city;
 	}
 	/////////////
 	public String getStartPoint() {
@@ -209,6 +349,7 @@ public class Sample implements Serializable {
 				&& (longitude!=null && !"".equals(longitude))) return ""+longitude+","+latitude;
 		else return null;
 	}
+	
 	public String getEndPoint() {
 		if((latitudeEnd !=null && !"".equals(latitudeEnd)) && (longitudeEnd !=null && !"".equals(longitudeEnd))) return ""+longitudeEnd+","+latitudeEnd;
 		else return null;
