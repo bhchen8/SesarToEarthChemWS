@@ -15,17 +15,17 @@ import com.sesar.util.DatabaseUtil;
 
 public class SampleDao {
 
-	protected Sample sample;
-	protected int sfNum; //sampling_feature_num
-	protected List<String> queries = new ArrayList<String>();
-	protected int annotationNum;
-	protected int sfAnnotationNum;
-	protected int sfepBridgeNum; //sampling_feature_extension_property.bridge_num
-	protected int foiNum; //feature_of_interest number
-	protected int foiCvNum; //feature_of_interest_cv number
-	protected int foiTypeNum; //max feature_of_interest_type number
-	protected int maxMethodNum; 
-	protected int collMethodNum; //collection_method
+	private Sample sample;
+	private int sfNum; //sampling_feature_num
+	private List<String> queries = new ArrayList<String>();
+	private int annotationNum;
+	private int sfAnnotationNum;
+	private int sfepBridgeNum; //sampling_feature_extension_property.bridge_num
+	private int foiNum; //feature_of_interest number
+	private int foiCvNum; //feature_of_interest_cv number
+	private int foiTypeNum; //max feature_of_interest_type number
+	private int maxMethodNum; 
+	private int collMethodNum; //collection_method
 	
 	public SampleDao() {}
 	
@@ -69,7 +69,28 @@ public class SampleDao {
 		annotation = sample.getCounty();
 		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"county");
 		annotation = sample.getCity();
-		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"city");
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"city");		
+		annotation = sample.getCurrentArchive();
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"current archive");
+		annotation = sample.getCurrentArchiveContact();
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"current archive contact");
+		annotation = sample.getOriginalArchive();
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"original archive");
+		annotation = sample.getOriginalArchiveContact();
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"original archive contact");
+		annotation = sample.getDepthScale();
+		if(!"".equals(annotation)) saveSamplingFeatureAnnotation(annotation,"depth spatial reference system");
+		SampleOtherNames sons = sample.getSampleOtherNames();
+		List<String> annotationList = sons.getSampleOtherName();
+		for(String an: annotationList) {
+			if(!"".equals(an)) saveSamplingFeatureAnnotation(an,"Other name");
+		}
+		Integer typeNum = (Integer)DatabaseUtil.getUniqueResult("select annotation_type_num from annotation_type where annotation_type_name = 'related resource link'");
+		ExternalUrls externalUrls = sample.getExternalUrls();
+		List<ExternalUrl> urls = externalUrls.getExternalUrl();
+		for(ExternalUrl ex: urls) saveSamplingFeatureAnnotationForExternalUrl(ex, typeNum);
+		
+		
 		
 		//SamplingFeatureExtensionProperty
 		Object obj = DatabaseUtil.getUniqueResult("SELECT max(bridge_num) FROM sampling_feature_extension_property");		
@@ -80,7 +101,11 @@ public class SampleDao {
 		if(extensionProperty != null) saveSamplingFeatureExtensionProperty(extensionProperty,"maximum numeric age");
 		extensionProperty = sample.getSize();
 		if(extensionProperty != null) saveSamplingFeatureExtensionProperty(extensionProperty,"size_unit");
-		
+		extensionProperty = sample.getDepthMin();
+		if(extensionProperty != null) saveSamplingFeatureExtensionProperty(extensionProperty,"depth, minimum");
+		extensionProperty = sample.getDepthMax();
+		if(extensionProperty != null) saveSamplingFeatureExtensionProperty(extensionProperty,"depth, maximum");
+
 		//FeatureOfInterest
 		foiNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(feature_of_interest_num) FROM feature_of_interest");	
 		foiCvNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(feature_of_interest_cv_num) FROM feature_of_interest_cv");		
@@ -92,6 +117,7 @@ public class SampleDao {
 		if(!"".equals(pName) && !"".equals(pType)) saveFeatureOfInterest(pName, pType);
 		String locality = sample.getLocality();
 		if(!"".equals(locality)) saveFeatureOfInterest(locality, "LOCALITY");
+		
 	
 		//method
 	/*	maxMethodNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(method_num) FROM method");	
@@ -99,15 +125,6 @@ public class SampleDao {
 		if(!"".equals(collectionMethod)) saveMethod(collectionMethod, "Collection Method"); 
 	*/
 		
-		
-		/*	System.out.println("bc-name: "+sample.getSampleType()+sample.getName());
-		SampleOtherNames others = sample.getSampleOtherNames();
-		String othernames = others.getSampleOtherName().get(0);
-		System.out.println("bc-name2: "+othernames);
-		ExternalUrls externalUrls = sample.getExternalUrls();
-		List<ExternalUrl> urls = externalUrls.getExternalUrl();
-		System.out.println("bc-name3: "+urls.get(0).getUrl());
-		*/
 		if(error == null) error = DatabaseUtil.update(queries);			
 		return error;
 	}
@@ -171,6 +188,18 @@ public class SampleDao {
 		q ="INSERT INTO sampling_feature_taxonomic_classifier VALUES ("+obj+","+sfNum+","+tcNum+")";
 		queries.add(q);
 		return null;
+	}
+	
+	private void saveSamplingFeatureAnnotationForExternalUrl(ExternalUrl ex, Integer typeNum) {
+		String text = ex.getDescription();
+		if(!"".equals(text)) {
+			String code = ex.getUrlType();
+			String link = ex.getUrl();
+			String q = "INSERT INTO annotation values ("+(++annotationNum)+","+typeNum+",'"+text+"',139,now(),'"+link+"','"+code+"')";
+			queries.add(q);
+			q = "INSERT INTO sampling_feature_annotation values ("+(++sfAnnotationNum)+","+sfNum+","+annotationNum+")";
+			queries.add(q);
+		}
 	}
 	
 	/////////////

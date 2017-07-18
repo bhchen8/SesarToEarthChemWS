@@ -51,12 +51,23 @@ public class Sample implements Serializable {
 	private String province;
 	private String county;
 	private String city;
-/*	
+	private String currentArchive; //current_archive
+	private String currentArchiveContact;//current_archive_contact
+	private String originalArchive;//original_archive
+	private String originalArchiveContact;
+	private Float depthMin;//depth_min;
+	private Float depthMax;//depth_max;
+	private String depthScale;//depth_scale
+	private String collectionStartDate;//collection_start_date
+	private String collectionEndDate;//collection_end_date
 	private String collectionMethodDescr; //collection_method_descr
+	private String cruiseFieldPrgrm;//cruise_field_prgrm
+/*	
+	
 	private Float purpose;//What is the extension_property.property_data_unit_num for "purpose"?
 	
 	
-	private String cruiseFieldPrgrm;//cruise_field_prgrm
+
 	private String platformType;//platform_type
 	private String platformName;//platform_name
 	private String platformDescr;//platform_descr
@@ -65,15 +76,7 @@ public class Sample implements Serializable {
 	private String launchTypeName;//
 	private String collector;//collector
 	private String collectorDetail;//collector_detail
-	private String collectionStart_date;//collection_start_date
-	private String collectionEnd_date;//collection_end_date
-	private String currentArchive; //current_archive
-	private String currentArchiveContact;//current_archive_contact
-	private String originalArchive;//original_archive
-	private String originalArchiveContact;
-	private float depthMin;//depth_min;
-	private float depthMax;//depth_max;
-	private String depthScale;//depth_scale
+	
 	private String sampleOtherNames;//sample_other_names
 */	
 	private SampleOtherNames sampleOtherNames;
@@ -299,8 +302,6 @@ public class Sample implements Serializable {
 	public void setLocationDescription(String locationDescription) {
 		this.locationDescription = locationDescription;
 	}
-	
-	
 	public String getLocality() {
 		return locality;
 	}
@@ -342,6 +343,85 @@ public class Sample implements Serializable {
 	@XmlElement
 	public void setCity(String city) {
 		this.city = city;
+	}
+	
+	public String getCurrentArchive() {
+		return currentArchive;
+	}
+	@XmlElement (name = "current_archive")
+	public void setCurrentArchive(String currentArchive) {
+		this.currentArchive = currentArchive;
+	}
+	public String getCurrentArchiveContact() {
+		return currentArchiveContact;
+	}
+	@XmlElement (name = "current_archive_contact")
+	public void setCurrentArchiveContact(String currentArchiveContact) {
+		this.currentArchiveContact = currentArchiveContact;
+	}
+	public String getOriginalArchive() {
+		return originalArchive;
+	}
+	@XmlElement (name = "original_archive")
+	public void setOriginalArchive(String originalArchive) {
+		this.originalArchive = originalArchive;
+	}
+	public String getOriginalArchiveContact() {
+		return originalArchiveContact;
+	}
+	@XmlElement (name = "original_archive_contact")
+	public void setOriginalArchiveContact(String originalArchiveContact) {
+		this.originalArchiveContact = originalArchiveContact;
+	}	
+	public Float getDepthMin() {
+		return depthMin;
+	}
+	@XmlElement (name = "depth_min")
+	public void setDepthMin(Float depthMin) {
+		this.depthMin = depthMin;
+	}
+	public Float getDepthMax() {
+		return depthMax;
+	}
+	@XmlElement (name = "depth_max")
+	public void setDepthMax(Float depthMax) {
+		this.depthMax = depthMax;
+	}
+	
+	public String getDepthScale() {
+		return depthScale;
+	}
+	@XmlElement (name = "depth_scale")
+	public void setDepthScale(String depthScale) {
+		this.depthScale = depthScale;
+	}
+	public String getCollectionStartDate() {
+		return collectionStartDate;
+	}
+	@XmlElement (name = "collection_start_date")
+	public void setCollectionStartDate(String collectionStartDate) {
+		this.collectionStartDate = collectionStartDate;
+	}
+	public String getCollectionEndDate() {
+		return collectionEndDate;
+	}
+	@XmlElement (name = "collection_end_date")
+	public void setCollectionEndDate(String collectionEndDate) {
+		this.collectionEndDate = collectionEndDate;
+	}	
+	public String getCollectionMethodDescr() {
+		return collectionMethodDescr;
+	}
+	@XmlElement (name = "collection_method_descr")
+	public void setCollectionMethodDescr(String collectionMethodDescr) {
+		this.collectionMethodDescr = collectionMethodDescr;
+	}	
+	public String getCruiseFieldPrgrm() {
+		return cruiseFieldPrgrm;
+	}
+	@XmlElement (name = "cruise_field_prgrm")
+	public void setCruiseFieldPrgrm(String cruiseFieldPrgrm) {
+		this.cruiseFieldPrgrm = cruiseFieldPrgrm;
 	}
 	/////////////
 	public String getStartPoint() {
