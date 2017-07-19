@@ -62,12 +62,6 @@ public class Sample implements Serializable {
 	private String collectionEndDate;//collection_end_date
 	private String collectionMethodDescr; //collection_method_descr
 	private String cruiseFieldPrgrm;//cruise_field_prgrm
-/*	
-	
-	private Float purpose;//What is the extension_property.property_data_unit_num for "purpose"?
-	
-	
-
 	private String platformType;//platform_type
 	private String platformName;//platform_name
 	private String platformDescr;//platform_descr
@@ -76,8 +70,10 @@ public class Sample implements Serializable {
 	private String launchTypeName;//
 	private String collector;//collector
 	private String collectorDetail;//collector_detail
+/*	
 	
-	private String sampleOtherNames;//sample_other_names
+	private Float purpose;//What is the extension_property.property_data_unit_num for "purpose"?
+	
 */	
 	private SampleOtherNames sampleOtherNames;
 	private ExternalUrls externalUrls;
@@ -422,6 +418,62 @@ public class Sample implements Serializable {
 	@XmlElement (name = "cruise_field_prgrm")
 	public void setCruiseFieldPrgrm(String cruiseFieldPrgrm) {
 		this.cruiseFieldPrgrm = cruiseFieldPrgrm;
+	}	
+	public String getPlatformType() {
+		return platformType;
+	}
+	@XmlElement (name = "platform_type")
+	public void setPlatformType(String platformType) {
+		this.platformType = platformType;
+	}
+	public String getPlatformName() {
+		return platformName;
+	}
+	@XmlElement (name = "platform_name")	
+	public void setPlatformName(String platformName) {
+		this.platformName = platformName;
+	}
+	public String getPlatformDescr() {
+		return platformDescr;
+	}
+	@XmlElement (name = "platform_descr")
+	public void setPlatformDescr(String platformDescr) {
+		this.platformDescr = platformDescr;
+	}
+	public String getLaunchPlatformName() {
+		return launchPlatformName;
+	}
+	@XmlElement (name = "launch_platform_name")
+	public void setLaunchPlatformName(String launchPlatformName) {
+		this.launchPlatformName = launchPlatformName;
+	}
+	public String getLaunchId() {
+		return launchId;
+	}
+	@XmlElement (name = "launch_id")
+	public void setLaunchId(String launchId) {
+		this.launchId = launchId;
+	}
+	@XmlElement (name = "launch_type_name")
+	public String getLaunchTypeName() {
+		return launchTypeName;
+	}
+	public void setLaunchTypeName(String launchTypeName) {
+		this.launchTypeName = launchTypeName;
+	}
+	public String getCollector() {
+		return collector;
+	}
+	@XmlElement (name = "collector")
+	public void setCollector(String collector) {
+		this.collector = collector;
+	}
+	public String getCollectorDetail() {
+		return collectorDetail;
+	}
+	@XmlElement (name = "collector_detail")
+	public void setCollectorDetail(String collectorDetail) {
+		this.collectorDetail = collectorDetail;
 	}
 	/////////////
 	public String getStartPoint() {

@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.sesar.dao.SampleDao;
+import com.sesar.dao.SamplingFeatureDao;
 import com.sesar.model.*;
 
 // Plain old Java Object it does not extend as class or implements
@@ -69,7 +69,7 @@ public class SesarEcService {
 		List<Sample> list = samples.getSamples();
 		for(Sample sample: list) {
 			name = sample.getName();
-			error = new SampleDao(sample).saveDataToDB();		
+			error = new SamplingFeatureDao(sample).saveDataToDB();		
 			if(error != null) break;
 		}
 		if(error != null) return "Error: "+error+" The data for sample "+name+" was not saved to the database.";

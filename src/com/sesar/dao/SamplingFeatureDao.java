@@ -13,7 +13,7 @@ import com.sesar.util.DatabaseUtil;
 * @since   2017-07-11 
 */
 
-public class SampleDao {
+public class SamplingFeatureDao {
 
 	private Sample sample;
 	private int sfNum; //sampling_feature_num
@@ -27,9 +27,7 @@ public class SampleDao {
 	private int maxMethodNum; 
 	private int collMethodNum; //collection_method
 	
-	public SampleDao() {}
-	
-	public SampleDao (Sample sample) {
+	public SamplingFeatureDao (Sample sample) {
 		this.sample= sample;
 		Object obj = DatabaseUtil.getUniqueResult("select max(sampling_feature_num) from sampling_feature");
 		if(obj != null) sfNum = (Integer)obj; 
@@ -118,12 +116,6 @@ public class SampleDao {
 		String locality = sample.getLocality();
 		if(!"".equals(locality)) saveFeatureOfInterest(locality, "LOCALITY");
 		
-	
-		//method
-	/*	maxMethodNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(method_num) FROM method");	
-		String collectionMethod = sample.getCollectionMethod();
-		if(!"".equals(collectionMethod)) saveMethod(collectionMethod, "Collection Method"); 
-	*/
 		
 		if(error == null) error = DatabaseUtil.update(queries);			
 		return error;
