@@ -115,8 +115,7 @@ public class SamplingFeatureDao {
 		if(!"".equals(pName) && !"".equals(pType)) saveFeatureOfInterest(pName, pType);
 		String locality = sample.getLocality();
 		if(!"".equals(locality)) saveFeatureOfInterest(locality, "LOCALITY");
-		
-		
+		new ActionDao(sample, sfNum, queries).saveData();		
 		if(error == null) error = DatabaseUtil.update(queries);			
 		return error;
 	}
@@ -228,19 +227,6 @@ public class SamplingFeatureDao {
 		queries.add("INSERT INTO feature_of_interest values ("+(++foiNum)+","+sfNum+","+typeNum+","+cvNum+")");
 	}
 	
-/*	
-	private void saveMethod(String name, String type) {
-		Object obj = DatabaseUtil.getUniqueResult("SELECT method_num FROM method where method_code = ''"+name+"'");
-		Integer mNum = null;
-		if(obj != null) mNum = (Integer)obj;
-		else {
-			queries.add("INSERT INTO feature_of_interest_cv values ("+(++foiCvNum)+",'"+name+"','SESAR')");
-			mNum = collMethodNum;
-		}
-		Integer typeNum = (Integer) DatabaseUtil.getUniqueResult("SELECT feature_of_interest_type_num FROM feature_of_interest_type where feature_of_interest_type_name = '"+type+"'");
-		queries.add("INSERT INTO feature_of_interest values ("+(++foiNum)+","+sfNum+","+typeNum+","+cvNum+")");
-	}
-*/	
 	private String getGeometry(String p1, String p2) {
    	 if(p2 != null && p1 != null) {return "'LINE' ,ST_SetSRID(ST_MakeLINE(ST_MakePoint("+p1+"), ST_MakePoint("+p2+")), 4326),";  		
    	 } else if (p1 != null) {

@@ -21,6 +21,7 @@ public class ActionDao {
 //	private String error;
 	private Integer methodNum;
 	private Integer actionNum;
+	private Integer maxActionNum;
 	private Integer maxFeatureActionNum;
 	private Integer maxEquipmentNum;
 	private Integer maxEqActionBridgeNum;
@@ -35,23 +36,23 @@ public class ActionDao {
 		this.sfNum = sfNum;
 		this.queries = queries;
 		maxFeatureActionNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(feature_action_num) FROM feature_action");
-		maxEquipmentNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(equipment_num) FROM eqobj;uipment");
+		maxEquipmentNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(equipment_num) FROM equipment");
 		maxEqActionBridgeNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(bridge_num) FROM equipment_action");
-		Object obj = DatabaseUtil.getUniqueResult("SELECT max(bridge_num) FROM action_by");
-		if(obj != null ) maxActionByBridgeNum = (Integer)obj;
+		maxActionNum = (Integer)DatabaseUtil.getUniqueResult("select max(action_num) from action");
 		beginDate = sample.getCollectionStartDate();
 		endDate = sample.getCollectionEndDate();
 		actionDescr = sample.getCollectionMethodDescr();
 		if(!"".equals(actionDescr)) actionDescr = "'"+actionDescr+"'";
 		else actionDescr = null;
 		orgNum = (Integer)DatabaseUtil.getUniqueResult("select organization_num from organization where organization_name like 'UNKNOWN'");
+		Object obj = DatabaseUtil.getUniqueResult("SELECT max(bridge_num) FROM action_by");
+		if(obj != null ) maxActionByBridgeNum = (Integer)obj;
 		setMethod();
 	}
 	
 	public List<String> getQueries() { return queries;}
 	
-	public String saveData() {
-		String error = null;		
+	public void saveData() {
 		Integer affiliationNum=null;
 		String person = sample.getCollector();
 		if(!"".equals(person)) affiliationNum = getAffiliationNum(person);
@@ -67,11 +68,9 @@ public class ActionDao {
 		name = sample.getLaunchId();
 		ename = sample.getLaunchPlatformName();
 		etype = sample.getLaunchTypeName();
-		if(!"".equals(name)) saveAction(name,"Launch from ship");		
+		if(!"".equals(name)) saveAction(name,"Launch from ship");
 		if(!"".equals(ename) && !"".equals(etype)) saveEquipmentAction(ename, etype, null);
 		if(affiliationNum != null) saveActionBy(affiliationNum);
-		
-		return error;
 	}
 	
 	private void saveAction(String name, String type) {
@@ -82,15 +81,15 @@ public class ActionDao {
 	
 			if(name != null) {
 				name = "'"+name+"'";
-				q += " and action_name = "+name; 
+				q += " and upper(action_name) = upper("+name+")"; 
 			}
 			if(beginDate != null) q += " and begin_date_time ='"+beginDate+"' ";
-			if(actionDescr != null) q += " and action_description = "+actionDescr;
+			if(actionDescr != null) q += " and upper(action_description) = upper("+actionDescr+")";
 			if(methodNum != null) q += " and method_num="+methodNum;
 			Object obj = DatabaseUtil.getUniqueResult(q);
 			if(obj != null) actionNum = (Integer)obj;
 			else {
-				actionNum = (Integer)DatabaseUtil.getUniqueResult("select max(action_num) from action");
+				actionNum = ++maxActionNum;
 				q = "INSERT INTO action values ("+actionNum+","+typeNum+","+methodNum+",'"+beginDate+"',null,'"+endDate+
 					"',null,"+actionDescr+",null,"+orgNum+","+name+",null)";
 				queries.add(q);
@@ -112,7 +111,7 @@ public class ActionDao {
 		if(obj != null) typeNum = (Integer) obj;		
 		else {
 			typeNum = (Integer)DatabaseUtil.getUniqueResult("select max(equipment_type_num+1) from equipment_type");
-			String q="INSERT INTO equipment_type VALUES ("+typeNum+","+type+",'Sesar')";
+			String q="INSERT INTO equipment_type VALUES ("+typeNum+",'"+type+"','Sesar')";
 			queries.add(q);
 		}
 		//set eqNum
@@ -124,13 +123,17 @@ public class ActionDao {
 			queries.add(q);
 			eqNum = maxEquipmentNum;
 		}
-		
-		String q = "INSERT INTO equipment_action values ("+(++maxEqActionBridgeNum)+","+eqNum+","+actionNum+")";
-		queries.add(q);
+		obj = DatabaseUtil.getUniqueResult("select bridge_num from equipment_action where action_num = "+actionNum+" and equipment_num = "+eqNum);
+		if(obj == null) {
+			String q = "INSERT INTO equipment_action values ("+(++maxEqActionBridgeNum)+","+eqNum+","+actionNum+")";
+			queries.add(q);
+		}
 	}
 	
 	private void saveActionBy(Integer affiliationNum) {
-		String q = "INSERT INTO action_by values ("+(++maxActionByBridgeNum)+","+actionNum+","+affiliationNum+",1)";
+		
+		String descr = sample.getCollectorDetail();
+		String q = "INSERT INTO action_by values ("+(++maxActionByBridgeNum)+","+actionNum+","+affiliationNum+",1,'"+descr+"')";
 		queries.add(q);
 	}
 
@@ -138,10 +141,10 @@ public class ActionDao {
 	private void setMethod() {
 		String method = sample.getCollectionMethod();
 		if(!"".equals(method)) {
-			Object obj = DatabaseUtil.getUniqueResult("SELECT method_num FROM method where method_code = ''"+method+"'");
+			Object obj = DatabaseUtil.getUniqueResult("SELECT method_num FROM method where method_code = '"+method+"'");
 			if(obj != null) methodNum = (Integer)obj;
 			else {
-				Integer typeNum = (Integer) DatabaseUtil.getUniqueResult("SELECT feature_of_interest_type_num FROM feature_of_interest_type where feature_of_interest_type_name = 'Collection'");
+				Integer typeNum = (Integer) DatabaseUtil.getUniqueResult("select method_type_num from method_type where method_type_name = 'Collection'");
 				methodNum = (Integer)DatabaseUtil.getUniqueResult("SELECT max(method_num+1) FROM method");
 				queries.add("INSERT INTO method values ("+methodNum+","+typeNum+",'"+method+"','"+method+"','Sesar Method')");
 			}	
@@ -165,12 +168,12 @@ public class ActionDao {
 			q +=" and upper(first_name)=upper("+first+") and upper(middle_name)=upper("+middle+")";
 		} 
 		Integer personNum = null;
-		Object obj = DatabaseUtil.getUniqueResult("select person_num from person where last_name="+last);
+		//Object obj = DatabaseUtil.getUniqueResult("select person_num from person where last_name="+last);
+		Object obj = DatabaseUtil.getUniqueResult(q);
 		if(obj !=null) {
 			personNum = (Integer)obj;
-			obj = DatabaseUtil.getUniqueResult("select affiliation_num from affiliation where person_num"+personNum);
-			if(obj != null) {
-				return (Integer)obj;
+			obj = DatabaseUtil.getUniqueResult("select affiliation_num from affiliation where person_num="+personNum);
+			if(obj != null) return (Integer)obj;
 		}
 		else {
 			personNum = (Integer)DatabaseUtil.getUniqueResult("select max(person_num+1) from person");
